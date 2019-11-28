@@ -1,0 +1,357 @@
+import React from 'react';
+import store from "~/src/store";
+import PropTypes from 'prop-types';
+import {withStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import { mapStateToProps,mapDispatchToProps } from '../action.js';
+import MarkDown from '../component/MarkDown'
+import {compose} from "redux";
+import {connect} from "react-redux";
+import Api from "~/src/util/apis";
+import Grid from '@material-ui/core/Grid';
+import { green, purple } from '@material-ui/core/colors';
+import TextField from '@material-ui/core/TextField';
+import NavigationIcon from '@material-ui/icons/Navigation';
+import Fab from '@material-ui/core/Fab';
+import Transfer from '../component/Transfer'
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import AddIcon from '@material-ui/icons/Add';
+import PostTeamDialog from '../component/PostTeamDialog'
+import DialogActions from '@material-ui/core/DialogActions';
+import SettingsIcon from "../component/MainHeader";
+import MenuItem from '@material-ui/core/MenuItem';
+
+const styles = theme => ({
+    root: {
+        marginTop:40,
+        marginBottom: 40
+    },
+    contents:{
+        paddingLeft:20
+    },
+    appBar: {
+        position: 'relative',
+    },
+    flex: {
+        display:'flex',
+        justifyContent:'space-between',
+    },
+    container: {
+        display: 'flex',
+        justifyContent:'space-between',
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+        marginTop:20
+    },
+    textField: {
+        // marginLeft: theme.spacing.unit,
+        // marginRight: theme.spacing.unit,
+        // width:640,
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 140,
+        display:'flex',
+    },
+    selectEmpty: {
+        marginTop: theme.spacing.unit * 2,
+    },
+    tempButton: {
+        margin: theme.spacing.unit,
+        display:'flex',
+        height: 40,
+    },
+    input: {
+        display: 'none',
+    },
+    control: {
+        padding: theme.spacing.unit * 2,
+    },
+    listRoot:{
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 300,
+        borderTop:'solid 2px #BCE0FD',
+        borderRight:'solid 2px #BCE0FD',
+        borderLeft:'solid 2px #BCE0FD',
+        borderRadius:"4px",
+        paddingBottom: '0px!important'
+    },
+    listItem:{
+        borderBottom:'solid 2px #BCE0FD',
+        padding:'0px!important',
+        textAlign:'left'
+    },
+    draftListTitle:{
+        textAlign:'left',
+    },
+    delete_icon: {
+        textAlign:'center',
+        color: "red",
+        fontSize: 24,
+        cursor: "pointer"
+    },
+    row:{
+        marginBottom:30
+    }
+});
+
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
+const ColorButton = withStyles(theme => ({
+    root: {
+        color: theme.palette.getContrastText(purple[500]),
+        backgroundColor: purple[500],
+        '&:hover': {
+            backgroundColor: purple[700],
+        },
+    },
+}))(Button);
+class PostTeam extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            post_team_open: false,
+            user_id: store.getState().user_id,
+            friends: [],
+            team: {
+                team_id: '',
+                name: '',
+                category: '',
+                admin_user_id: '',
+                image_path:'aaaa.jpg',
+                contents:'',
+                member: {}
+            },
+            display_loading: true
+        }
+    };
+    //レンダリング直前
+    postTeamOpen = () => {
+        this.setState({ post_team_open: true });
+    };
+    postTeamClose = async () => {
+        await this.setState({ post_team_open: false });
+    };
+
+    //アラート画面を閉じる
+    popupClose = () => {
+        this.setState({ draftSaveOpen: false });
+        this.setState({post_team_open:false})
+    };
+    setValue= async (name,value) => {
+        let team = this.state.team;
+        team[name] = value;
+        this.setState( {team:team});
+        console.log("team:"+team)
+    };
+
+    //stateにコンテンツをセット
+    setContents = async (contents) => {
+        let team = this.state.team;
+        team["contents"] = contents;
+        await this.setState({team: team});
+        console.log(this.state.team)
+    };
+    setMember = async (member) =>{
+        await this.setState({
+            member:member
+        })
+    };
+    saves = async(status) =>{
+        if (this.state.team.team_id === ''){
+            //新規
+            await this.do_save(status).then(
+                (result) => {
+                    this.clear()
+                }).catch()
+        } else {
+            //更新
+            await this.do_update(status).then(
+                (result) => {
+                    this.clear()
+                }).catch()
+        }
+    };
+
+    do_save = async () =>{
+        return new Promise(async (resolve, reject) => {
+            let params = new URLSearchParams();
+            params.set('user_id', store.getState().user_id);
+            params.set('category', this.state.team.category);
+            params.set('name', this.state.team.name);
+            params.set('image_path', this.state.team.image_path);
+            params.set('contents', this.state.team.contents);
+            await Api.postTeam(params).then(
+                async function (response) {
+                    let team_id = response.team_id
+                    params.set('team_id', team_id);
+                    await Api.postJoinNotice(params).then(
+                        async function (response) {
+                            console.log(response)
+                        }
+                    )
+                }
+            ).catch(
+                console.log("エラー")
+            );
+
+            await this.popupOpen()
+            await window.setTimeout(() => {
+                this.popupClose();
+            }, 2000);
+        }).catch(
+            reject()
+        );
+        resolve(true)
+    };
+    do_update = async (status) =>{
+        return new Promise(async (resolve, reject) => {
+            await this.setState({
+                team: {
+                    name: this.state.team.name,
+                    category: this.state.team.category,
+                    admin_user_id: this.state.team.admin_user_id,
+                    image_path: this.state.team.image_path,
+                    contents: this.state.team.contents,
+                    member: this.state.team.member
+                }
+            });
+
+
+            let params = new URLSearchParams();
+            params.set('entry_id', this.state.entry_id);
+            params.set('user_id', this.state.user_id);
+            params.set('content', JSON.stringify(this.state.entry));
+            params.set('status', status); //本投稿
+            params.set('role', 1); //フルオープン
+
+            await Api.updateTeam(params).then(
+                function (response) {
+                    console.log(response)
+                }
+            );
+
+            await this.props.setEntry(this.state.entry)
+
+            await this.tempBtnClickOpen()
+            await window.setTimeout(() => {
+                this.popupClose();
+            }, 2000);
+
+            resolve(true)
+        });
+    }
+
+    clear(){
+        alert("clear")
+        this.setState({
+            team: {
+                name: '',
+                category: '',
+                admin_user_id: '',
+                image_path:'',
+                contents:'',
+                member: {}
+            },
+            entry_id:''
+        });
+    }
+    popupOpen = () => {
+        this.setState({ draftSaveOpen: true });
+    };
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <div>
+                <div onClick={this.postTeamOpen}>
+                    {(() => {
+                        if(this.props.menu === true){
+                            return(
+                                <MenuItem>
+                                    <IconButton color="inherit">
+                                        <SettingsIcon />
+                                    </IconButton>
+                                    <p>チームを作る</p>
+                                </MenuItem>
+                            )
+                        } else {
+                            return(
+                                <Fab color="primary" aria-label="add" className={classes.margin}>
+                                    <AddIcon fontSize="large" />
+                                </Fab>
+                            )
+                        }
+                    })()}
+                </div>
+                <Dialog
+                    fullScreen
+                    open={this.state.post_team_open}
+                    onClose={this.postTeamClose}
+                    TransitionComponent={Transition}
+                >
+                    <AppBar className={classes.appBar}>
+                        <Toolbar className={classes.flex}>
+                            <IconButton color="inherit" onClick={this.postTeamClose} aria-label="Close">
+                                <CloseIcon />
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" >
+                                チームを作る
+                            </Typography>
+                            <Button color="inherit" onClick={() =>this.saves(3)}>
+                                作成
+                            </Button>
+                        </Toolbar>
+                    </AppBar>
+                    <PostTeamDialog setValue={this.setValue} setMember={this.setMember} setContents={this.setContents}/>
+                </Dialog>
+                <Dialog
+                    open={this.state.draftSaveOpen}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            <b>チームを作成しました。<br />
+                            前の画面に戻ります。</b>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.popupClose} color="primary" autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    }
+}
+
+PostTeam.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default compose(
+    withStyles(styles),
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
+)(PostTeam)

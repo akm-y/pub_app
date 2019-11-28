@@ -1,0 +1,15 @@
+.swiper-slide {
+  cursor: pointer;
+}
+
+.sample03 .swiper-button-prev,
+.sample03 .swiper-button-next {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .sample03 .swiper-button-prev,
+  .sample03 .swiper-button-next {
+    display: block;
+  }
+}

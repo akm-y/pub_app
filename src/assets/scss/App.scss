@@ -1,0 +1,311 @@
+body {
+  //text-align: center;
+  background-color: #ffffff!important;
+  line-height: 24px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  color: #6b6d6f;
+}
+header{
+  background-color: #ffffff;
+}
+main{
+  //background-color: #f0ecec;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.box26 {
+  width: 100%;
+  position: relative;
+  margin: 2em 0;
+  padding: 0.5em 0 0.5em 1em;
+  border: solid 3px #95ccff;
+  border-radius: 8px;
+}
+.box26 .box-title {
+  position: absolute;
+  display: inline-block;
+  top: -13px;
+  left: 10px;
+  padding: 0 9px;
+  line-height: 1;
+  font-size: 19px;
+  background: #FFF;
+  color: #95ccff;
+  font-weight: bold;
+}
+.box26 p {
+  margin: 0;
+  padding: 0;
+}
+
+
+.subject {
+  position: relative;
+  text-align: center;
+  font-size: 1.0rem;
+}
+.subject span {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  margin: 0 4em;
+  padding: 0 2em;
+  background-color: #fff;
+  text-align: left;
+}
+.subject::before {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #78909c;
+  background: -webkit-linear-gradient(-45deg, transparent, #78909c 10%, #78909c 90%, transparent);
+  background: linear-gradient(-45deg, transparent, #78909c 10%, #78909c 90%, transparent);
+}
+#tab{
+  box-shadow: none!important;
+  background-color: #ffffff!important;
+}
+
+#tab ::after {
+  display: inline-block;
+  border-bottom: solid 1px #000000;
+  content:"";
+  position: relative;
+  top: -3px;
+}
+
+#tab .tab_item::after{
+  display: inline-block;
+  border-bottom: solid 1px #000000;
+  content:"";
+  position: relative;
+  top: 3px;
+}
+
+.react-mde .mde-header .mde-tabs{
+  font-size: 0.7rem;
+  button{
+    padding: 5px;
+  }
+}
+
+.head{
+  padding: 5px;
+  border-left:solid 5px;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.mb20{
+  margin-bottom: 20px;
+}
+
+.fs26{
+  font-size: 26px;
+}
+
+.contents {
+  color: #78909c;
+  text-align: center; }
+
+/* 吹き出し本体 */
+.balloon-left{
+  position: relative;
+  padding: 20px;
+  background-color: #107b5e;
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 20px 0 0 10px;
+  width: 50%;
+}
+/* 色付きの半円 */
+.balloon-left::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform: rotate(-89deg);
+  left: -15px;
+  top: 7px;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  border-radius: 100% 0 0;
+  background: #107b5e;
+}
+/* 白い半円 */
+.balloon-left::after{
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform: rotate(-89deg);
+  left: -19px;
+  top: -7px;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  border-radius: 100% 0 0;
+  background: #fff;
+  text-align: left;
+}
+
+.balloon-right{
+  margin-top: 20px;
+  position: relative;
+  padding: 20px;
+  border: solid 2px #107b5e;
+  background-color: #107b5e;
+  color: #ffffff;
+  border-radius: 10px;
+  margin-right: 20px;
+  max-width: 50%;
+  margin-left: auto;
+}
+/* 色付きの半円 */
+.balloon-right::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform: rotate(178deg);
+  right: -15px;
+  top: 11px;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  border-radius: 100% 0 0;
+  background: #107b5e;
+}
+/* 白い半円 */
+.balloon-right::after{
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform: rotate(178deg);
+  right: -20px;
+  top: -2px;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  border-radius: 100% 0 0;
+  background: #ffffff;
+}
+.mainContents{
+  margin:60px auto 0
+
+}
+
+.cardWrap{
+
+}
+.MuiPaper-elevation1-4910 {
+  box-shadow: 5px 8px 10px 3px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)!important;
+}
+.MuiPaper-rounded-4908 {
+  border-radius: 17px!important;
+}
+.fs12{
+  font-size: 12px;
+}
+
+.fs14{
+  font-size: 14px;
+}
+.card{
+  min-width: 275px;
+  margin-top: 40px;
+  box-sizing: border-box;
+  border: 5px solid black;
+  border-radius:30px;
+  box-shadow: 10px 10px 10px rgba(0,0,0,0.4);
+  background-color: #FFFFFF;
+  button{
+      font-weight: bold;
+      border: solid 2px black;
+    color: #FFFFFF;
+  }
+}
+.tempButton{
+  font-weight: bold;
+  border: solid 2px black;
+  color: #FFFFFF;
+}
+
+.main_title h2 {
+  font-size: 26px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
+
+.main_title h2::before {
+  content: "";
+  width: 60px;
+  height: 2px;
+  background: #78909c;
+  position: absolute;
+  left: 50%;
+  bottom: 0px;
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+
+.addBtn{
+  position:fixed;
+  right:20px;
+  z-index: 1000!important;
+  position: fixed;
+  right: 20px;
+  border: 10px;
+  bottom: 20px;
+  button{
+    font-weight: bold;
+    border: solid 2px black;
+    color: #FFFFFF;
+  }
+}
+
+.mde-preview{
+  min-height: 40px!important;
+}
+
