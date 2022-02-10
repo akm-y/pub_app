@@ -22,7 +22,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "history": "^4.9.0",
     "material-ui": "^0.20.2",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "parcel-bundler": "^1.12.3",
     "pic": "^1.0.1",
     "posthtml-img-autosize": "^0.1.4",
